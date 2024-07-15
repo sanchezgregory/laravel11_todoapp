@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class TaskComponent extends Component
@@ -23,7 +25,17 @@ class TaskComponent extends Component
 
     public function getTasks()
     {
-        return $this->tasks = Task::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        $user = Auth::user();
+        $this->tasks = $user->sharedTasks()->orderBy('created_at', 'desc')->get();
+        return $this->tasks;
+    }
+
+    public function renderAllTasks()
+    {
+        $tasks = Cache::remember('user_' . Auth::id() . '_tasks', now()->addSeconds(60), function () {
+            return Auth::user()->sharedTasks()->orderBy('created_at', 'desc')->get();
+        });
+        return $this->getTasks();
     }
 
     public function updatedTasks()
@@ -51,11 +63,14 @@ class TaskComponent extends Component
 
     public function createTask()
     {
-        $task = new Task();
-        $task->user_id = Auth::id();
-        $task->title = $this->title;
-        $task->description = $this->description;
-        $task->save();
+        DB::transaction(function () {
+            $task = new Task();
+            $task->title = $this->title;
+            $task->description = $this->description;
+            $task->save();
+            $task->sharedWith()->attach(Auth::user()->id, ['permission' => 'edit']);
+        });
+        $this->addNew = false;
         $this->clearFields();
         $this->getTasks();
         $this->reset(['addNew', 'deleteConfirm']);
@@ -103,5 +118,8 @@ class TaskComponent extends Component
         $this->getTasks();
         $this->clearFields();
         $this->reset(['deleteConfirm']);
+        $this->addNew = false;
+        $this->deleteConfirm = false;
+        $this->updatedTasks = false;
     }
 }

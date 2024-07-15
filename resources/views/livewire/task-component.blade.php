@@ -1,5 +1,5 @@
 <div>
-    <h1>Tareas de {{ Auth::user()->name }} Cantidad de tareas: {{ Auth::user()->tasks()->count() }} </h1>
+    <h1>Tareas de {{ Auth::user()->name }} Cantidad de tareas: {{ Auth::user()->sharedTasks()->count() }} </h1>
 
     <div x-data="{ open: false }">
         <div class="block w-full overflow-x-auto">
@@ -115,7 +115,7 @@
                                           d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                             </button>
-                            <button class="text-red-500 hover:text-red-800" x-on:click="open = true"
+                            <button class="text-red-500 hover:text-red-800" x-on:click="open = true" wire:confirm="Do you really want to delete this task?"
                                     wire:click="deleteTask({{ $task->id }})">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                      xmlns="http://www.w3.org/2000/svg">

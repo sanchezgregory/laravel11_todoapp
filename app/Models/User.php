@@ -10,7 +10,9 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, softDeletes;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +35,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function sharedTasks()
+    {
+        return $this->belongsToMany(Task::class, 'task_user', 'user_id', 'task_id')->withPivot('permission')->withTimestamps();
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -44,10 +51,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function tasks(): HasMany
-    {
-        return $this->hasMany(Task::class);
     }
 }

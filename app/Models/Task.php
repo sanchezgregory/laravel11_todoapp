@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use HasFactory, softDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -16,8 +17,8 @@ class Task extends Model
         'description',
     ];
 
-    public function user()
+    public function sharedWith()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id')->withPivot('permission')->withTimestamps();
     }
 }
