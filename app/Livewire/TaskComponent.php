@@ -104,15 +104,4 @@ class TaskComponent extends Component
         $this->clearFields();
         $this->reset(['deleteConfirm']);
     }
-
-    public function test()
-    {
-        $a = true;
-    }
-
-    public function asdadss()
-    {
-        if ($a === true) {
-        }
-    }
 }
