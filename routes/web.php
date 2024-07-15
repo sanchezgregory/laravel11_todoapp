@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
-//Route::view('/', 'welcome');
+
 Route::redirect('/', 'dashboard');
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware(['auth']);

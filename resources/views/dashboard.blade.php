@@ -12,36 +12,11 @@
                     <h1 class="text-3xl font-bold mb-5 text-center text-gray-800">Bienvenido al gestor de tareas</h1>
                     {{ Auth::user()->name }}
 
-                    @livewire('counter-component', ['tasks' => $tasks], key(time()))
-
-
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach($tasks as $task)
-                                <tr>
-                                    <td>{{ $task->name }}</td>
-                                    <td>{{ $task->description }}</td>
-                                    <td>
-                                        <a href="">Editar</a>
-                                        <form action="" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit">Eliminar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <div class="bg-amber-950 p-4 rounded text-white mb-6 text-center">
+                        <h1>Componente de contador</h1>
+                        @livewire('counter-component', ['tasks' => $tasks], key(time()))
+                    </div>
+                    @livewire('task-component', ['tasks' => $tasks], key(time()))
 
                 </div>
             </div>
